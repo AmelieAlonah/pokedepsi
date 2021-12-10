@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% load static %}
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Pokédex</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon_pkm.png' %}" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    </head>
+    <body>
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="/myapp/">Pokédex</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item"><a class="nav-link" href="../my_team/">Mon équipe</a></li>
+                    </ul>
+                    <div style="padding:20px;">
+                        <form class="form-search form-inline" method="POST" action="{% url 'index' %}">
+                        {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text" name="searched" class="form-control search-query" placeholder="Rechercher..." />
+                                <button class="btn btn-outline-dark" type="submit"> Valider</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">Pokémons</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">Première génération</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Section-->
+
+        <section class="py-5">
+            <div class="container px-4 px-lg-5 mt-5">
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-left">
+                    <div class="col mb-2">
+                        <a class="btn btn-outline-dark" type="submit" href="{% url 'create_team' %}"> Créer une équipe</a>
+                    </div>
+                </div>
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-6 justify-content-left">
+                    {% for t in teams %}
+                        {% with name=t.pokemon1|stringformat:"s" %}
+                        {% with name2=t.pokemon2|stringformat:"s" %}
+                        {% with name3=t.pokemon3|stringformat:"s" %}
+                        {% with name4=t.pokemon4|stringformat:"s" %}
+                        {% with name5=t.pokemon5|stringformat:"s" %}
+                        {% with image_name="assets/1G/"|add:name|add:".png" %}
+                        {% with image_name2="assets/1G/"|add:name2|add:".png" %}
+                        {% with image_name3="assets/1G/"|add:name3|add:".png" %}
+                        {% with image_name4="assets/1G/"|add:name4|add:".png" %}
+                        {% with image_name5="assets/1G/"|add:name5|add:".png" %}
+                        <div class="col mb-2">
+                             <div class="col mb-5">
+                                <div class="card h-100">
+                                    <img class="" src="{% static image_name %}" alt="..." />
+                                </div>
+                             </div>
+                        </div>
+                        <div class="col mb-2">
+                             <div class="col mb-5">
+                                <div class="card h-100">
+                                    <img class="card-img-top" src="{% static image_name2 %}" alt="..." />
+                                </div>
+                             </div>
+                        </div>
+                        <div class="col mb-2">
+                             <div class="col mb-5">
+                                <div class="card h-100">
+                                    <img class="card-img-top" src="{% static image_name3 %}" alt="..." />
+                                </div>
+                             </div>
+                        </div>
+                        <div class="col mb-2">
+                             <div class="col mb-5">
+                                <div class="card h-100">
+                                    <img class="card-img-top" src="{% static image_name4 %}" alt="..." />
+                                </div>
+                             </div>
+                        </div>
+                        <div class="col mb-2">
+                             <div class="col mb-5">
+                                <div class="card h-100">
+                                    <img class="card-img-top" src="{% static image_name5 %}" alt="..." />
+                                </div>
+                             </div>
+                        </div>
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                        <div class="col mb-2">
+                             <div class="col mb-5">
+                                <div class="card">
+                                    <a class="btn btn-outline-dark" type="submit" href="{% url 'update_team' t.id %}"> Modifier</a>
+                                    <br>
+                                    <a class="btn btn-outline-dark" type="submit" href="{% url 'delete_team' t.id %}"> Supprimer</a>
+
+                                </div>
+                             </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+            </div>
+
+        </section>
+        <!-- Footer-->
+        <footer class="py-5 bg-dark">
+            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Pokédex 2021</p></div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>

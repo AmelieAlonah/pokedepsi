@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% load static %}
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Pokédex</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon_pkm.png' %}" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    </head>
+    <body>
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="/myapp/">Pokédex</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item"><a class="nav-link" href="../../my_team/">Mon équipe</a></li>
+                    </ul>
+                   <form class="form-search form-inline" method="POST" action="{% url 'index' %}">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" name="searched" class="form-control search-query" placeholder="Rechercher..." />
+                            <button class="btn btn-outline-dark" type="submit"> Valider</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </nav>
+        <!-- Header-->
+        <header class="bg-dark py-5">
+            <div class="container px-4 px-lg-5 my-5">
+                <div class="text-center text-white">
+                    <h1 class="display-4 fw-bolder">{{ details.name|title }}</h1>
+                    <p class="lead fw-normal text-white-50 mb-0">{{ details.id }}</p>
+                </div>
+            </div>
+        </header>
+
+        <section>
+            <div class="container px-4 px-lg-5 mt-5">
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                    <div class="col mb-2">
+                        <div class="col mb-5">
+                            <div class="card h-100">
+                                {% with id=details.id|stringformat:"s" %}
+                                {% with name="assets/1G/"|add:id|add:".png" %}
+
+                                <img class="card-img-top" src="{% static name %}" alt="..." />
+
+                                {% endwith %}
+                                {% endwith %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-2">
+                        <div row="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                            <h3> Types : </h3>
+                        </div>
+                        {% if details %}
+                            {% for t in details.types %}
+                                - {{ t.type.name|title }} <br>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="col mb-2">
+                         <div row="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                            <h3> Mensurations : </h3>
+                         </div>
+                        {% with taille=details.height|stringformat:"s" %}
+                        {% with poids=details.weight|stringformat:"s" %}
+
+                            {% if poids|length > 1 %}
+                                - {{ poids|slice:"-1" }},{{ poids|last}} kg
+                            {% else %}
+                                - 0,{{ poids }} kg
+                            {% endif %}
+
+                            <br>
+
+                            {% if taille|length > 1 %}
+                                - {{ taille|slice:"-1" }},{{ taille|last }} m
+                            {% else %}
+                                - 0,{{ taille }} m
+                            {% endif %}
+
+                        {% endwith %}
+                        {% endwith %}
+                    </div>
+                    <div class="col mb-2">
+                    </div>
+                </div>
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                    {% with prev_id=details.id|add:"-1" %}
+                    {% with next_id=details.id|add:"1" %}
+                    {% with str_next_id=next_id|stringformat:"s" %}
+                    {% with str_prev_id=prev_id|stringformat:"s" %}
+                    {% with next_page="../../details/"|add:str_next_id|add:"/"  %}
+                    {% with prev_page="../../details/"|add:str_prev_id|add:"/"  %}
+                        <div class="col mb-2">
+                            {% if details.id == 1 %}
+                                <a class="btn btn-outline-dark mt-auto" href="../../details/151">← Pokémon précédent</a>
+                            {% else %}
+                                <a class="btn btn-outline-dark mt-auto" href="{{ prev_page }}">← Pokémon précédent</a>
+                            {% endif %}
+                        </div>
+                        <div class="col mb-2">
+                        </div>
+                        <div class="col mb-2">
+                        </div>
+
+                        <div class="col mb-2">
+                            {% if details.id == 151 %}
+                                <a class="btn btn-outline-dark mt-auto" href="../../details/1">Pokémon suivant →</a>
+                            {% else %}
+                                <a class="btn btn-outline-dark mt-auto" href="{{ next_page }}">Pokémon suivant →</a>
+                            {% endif %}
+                        </div>
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                    {% endwith %}
+                </div>
+            </div>
+        </section>
+        <!-- Footer-->
+        <footer class="py-5 bg-dark">
+            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Pokédex 2021</p></div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
